@@ -175,7 +175,7 @@ func jisuanji(a float32, fuhao string,b float32)(float32) {     //  func 函数�
 //复习  数组和切片
 //递归  汉诺塔
 
-/*package main
+package main
 
 import "fmt"
 
@@ -200,4 +200,3 @@ func main() {
 	move(n,'x','y','z')
 }
 
-*/
