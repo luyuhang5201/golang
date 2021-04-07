@@ -1,0 +1,108 @@
+//自学数组作为函数参数，使用函数与数组的知识完成成绩录入及查询系统，必须具备以下功能。
+//功能1：可以录入成绩（成绩的个数自己拟定，不少于5个。提示成绩可以用数组保存）
+//
+//功能2：该查询系统必须具备查询功能列表（使用序号区分不同的查询功能，查询功能必须可查最高分，最低分，平均分）
+
+package main
+
+import (
+	"fmt"   //
+	"os"   //针对操作系统的操作 os标准包，是一个比较重要的包，顾名思义，主要是在服务器上进行系统的基本操作，如文件操作，目录操作，执行命令，信号与中断，进程，系统状态等等。在os包下，有exec，signal，user三个子包
+)
+
+type student struct {
+	name0        string
+	num0, score0 int
+}
+
+func newStudent(name string, num, score int) *student { //模拟student的构造函数
+	return &student{
+		name0:  name,
+		num0:   num,
+		score0: score,
+	}
+}
+
+var studentInf = make([]*student, 0, 100)
+
+func userInput() *student {
+	var (
+		name       string
+		num, score int
+	)
+	fmt.Print("请输入学生学号：")
+	fmt.Scanln(&num)
+
+	fmt.Print("请输入学生姓名：")
+	fmt.Scanln(&name)
+
+	fmt.Print("请输入学生成绩：")
+	fmt.Scanln(&score)
+	return newStudent(name, num, score)
+}
+
+func addInf() {
+	ptr := userInput() //ptr类型是*student
+	studentInf = append(studentInf, ptr)         //运用数组，切片，遍历
+	fmt.Println("添加信息成功！")
+	fmt.Printf("您添加信息如下：\n姓名：%v\t学号：%v\t成绩：%v\n", ptr.name0, ptr.num0, ptr.score0)
+	menu()      //录入成功后返回函数菜单栏
+}
+
+func printInf() {     //套用长度
+	if len(studentInf) == 0 {
+		fmt.Println("没有任何成绩信息")
+		menu()
+	}
+	for _, val := range studentInf {
+		fmt.Printf("%#v\n", *val)
+	}
+	menu()
+}
+
+func changeInf() {       // 建立修改学生成绩函数
+	var (
+		num int    // 设立一个为int类型的数据num 充当学号
+	)
+	fmt.Print("请输入想要修改的学生学号：")
+	fmt.Scanln(&num)
+	var finish bool
+	for index, val := range studentInf {
+		if val.num0 == num {
+			ptr := userInput()
+			studentInf[index] = ptr
+			finish = true
+			fmt.Printf("修改成功！姓名：%s\t学号：%d\t成绩：%d\n", ptr.name0, ptr.num0, ptr.score0)
+			menu()
+		}
+	}
+	if !finish {    //如果不存在
+		fmt.Println("输入的学号不存在")
+	}
+}
+func menu() {      //菜单函数
+	fmt.Printf("--------------------学生成绩管理系统--------------------\n")
+	fmt.Printf("0.添加学生成绩                              1.修改学生成绩\n")
+	fmt.Printf("2.查看学生成绩				                3.退出系统  \n")
+	var choose int      //choose    /xuanze
+	fmt.Scanln(&choose)
+	switch choose {      //建立选择结构体
+	case 0:
+		addInf()
+	case 1:
+		changeInf()
+	case 2:
+		printInf()
+	case 3:
+		fmt.Println("退出系统!")
+		os.Exit(0)
+	default:   //默认
+		fmt.Println("输入有误，请重新选择：")
+		menu()    //默认返回主菜单栏进行二次选择， 实现一个递归的效果，循环嵌套
+	}
+}
+
+func main() {
+	menu()   ///通过主函数去引导其他函数的运行
+
+}
